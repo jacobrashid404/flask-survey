@@ -46,6 +46,8 @@ def store_and_redirect():
     Redirect user to next survey question. """  # ask re: docstring indentation
 
     # append answer to your responses list
+    responses.append(request.form['answer'])
 
     # redirect them to the next question
-    return redirect("/questions/")  # how to increment
+    return redirect(f"/questions/{len(responses)}")
+    
