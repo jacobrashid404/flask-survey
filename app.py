@@ -45,9 +45,28 @@ def store_and_redirect():
     """ Store user's response in responses list.
     Redirect user to next survey question. """  # ask re: docstring indentation
 
-    # append answer to your responses list
     responses.append(request.form['answer'])
 
-    # redirect them to the next question
-    return redirect(f"/questions/{len(responses)}")
-    
+    if len(responses) == len(survey.questions):
+        return redirect("/thank-you")
+    else:
+        return redirect(f"/questions/{len(responses)}")
+
+
+@app.get("/thank-you")
+def end_survey():
+    """ Display message thanking user for filling out survey.
+    Display list of survey questions and user's answers. """
+
+    # # Make dict of {code:story, code:story, ...}
+    # stories = {s.code: s for s in [story1, story2]}
+
+    # syntax for dictionary comprehension from two lists comes from:
+    # https://www.geeksforgeeks.org/python-convert-two-lists-into-a-dictionary/
+    question_answer = {
+        survey.questions[i]: responses[i] for i in range(len(survey.questions))}
+
+    return render_template(
+        "completion.jinja",
+        question_answer
+    )
