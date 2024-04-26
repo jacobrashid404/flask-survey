@@ -10,7 +10,7 @@ debug = DebugToolbarExtension(app)
 
 responses = []  # store user answers in this list
 
-
+#TODO: Add docstrings
 @app.get('/')
 def show_survey_info():
     # get title and instructions for survey
@@ -27,6 +27,9 @@ def show_survey_info():
 
 @app.post("/begin")
 def redirect_to_survey():
+    """docstring"""
+    
+    responses.clear() #empty out responses list
     return redirect("/questions/0")
 
 
@@ -57,16 +60,13 @@ def store_and_redirect():
 def end_survey():
     """ Display message thanking user for filling out survey.
     Display list of survey questions and user's answers. """
-
-    # # Make dict of {code:story, code:story, ...}
-    # stories = {s.code: s for s in [story1, story2]}
-
-    # syntax for dictionary comprehension from two lists comes from:
-    # https://www.geeksforgeeks.org/python-convert-two-lists-into-a-dictionary/
-    question_answer = {
-        survey.questions[i]: responses[i] for i in range(len(survey.questions))}
-
+    
+    #TODO: lookup python enumerate!
+    questions = [question.prompt for question in survey.questions]
+    zip_survey_data = zip(questions, responses)
+    questions_and_answers = dict(zip_survey_data)
+    
     return render_template(
         "completion.jinja",
-        question_answer
+        questions_and_answers=questions_and_answers
     )
